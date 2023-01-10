@@ -4,7 +4,8 @@ import spotipy.util as util
 
 # Replace these with your own client ID and client secret
 CLIENT_ID = "e459f05bbb634aacb779c08530c4d26f"
-CLIENT_SECRET = "6858abef8c7e4b91b938e0af2d7725eb"
+CLIENT_SECRET = "6858abef8c7e4b91b938e0af2"
+
 
 # Replace this with the redirect URI you specified when registering your app
 REDIRECT_URI = "http://localhost:8888/callback"

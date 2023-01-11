@@ -8,7 +8,7 @@ openai.api_key = os.getenv('openai_api_key')
 
 def generate_name(songs, used_names):
     song_string = " ".join([f"{song[0]} by {song[1]}" for song in songs])
-    prompt = f"(Do not include the name of any the songs or any of aritist in the response) Give me a creative, unique and aesthetic name that encapsulates the overall vibe of the following songs, only respond with a 1-5 word name for this playlist and nothing else:\n{song_string}"
+    prompt = f"(Do not include the title (or any words from the tile) of any the songs or any of aritist name in the response) Give me a creative, unique, quirky, and aesthetic name that encapsulates the overall vibe of the following songs, only respond with a 1-5 word name for this playlist and nothing else:\n{song_string}"
     response = openai.Completion.create(
         model="text-davinci-002",
         prompt=prompt,
@@ -21,7 +21,7 @@ def generate_name(songs, used_names):
     name = response["choices"][0]["text"]
     while name in used_names:
         response = openai.Completion.create(
-            model="text-davinci-002",
+            model="text-curie-001",
             prompt = f"(Do not include the name of any the songs or any of aritist in the response) Give me a new, creative, unique and aesthetic name that encapsulates the overall vibe of the following songs, only respond with a 1-5 word name for this playlist and nothing else:\n{song_string}",
             max_tokens=32,
             temperature=0.7,

@@ -1,51 +1,48 @@
-# Import the necessary libraries
+import openai
 import requests
-from requests.structures import CaseInsensitiveDict
+from PIL import Image
+from io import BytesIO
+import os 
+from dotenv import load_dotenv
+from song_data import songs, selected_name
+#run this to get env
+load_dotenv()
+# Replace this with your own API key
+openai.api_key = os.getenv('openai_api_key')
 
-import json
+# Prompt the user to enter the art style
+art_style = input("Enter the art style you want to use for your playlist image "
+                    + "(e.g. 'watercolor', 'oil', 'graffiti', etc.): ")
 
-# Replace these values with your own Dall-E 2 API key and model
-API_KEY = "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"
-MODEL = "image-alpha-001"
+# Define a function to generate a summary of the playlist using GPT-3
+def generate_summary(songs, selected_name, art_style):
+    song_string = " ".join([f"{song[0]} by {song[1]}" for song in songs])
+    prompt = f"Summarize the overall vibe, mood and feel of playlist named {selected_name} containing following songs in a few words, also mention the art style you want to use in the summary(this is going to used as a request for dalle-2 so make it as best fit for that): {song_string} {art_style}"
+    completions = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=128,
+        n=1,
+        stop=None,
+        temperature=0.7,
+    )
+    message = completions.choices[0].text
+    return message
 
-# Define the endpoint URL
-ENDPOINT = "https://api.openai.com/v1/images/generations"
+# Define a function to generate an image using DALL-E 2 based on the summary
+def generate_image(summary):
+    response = openai.Image.create(
+        prompt=f"generate an image based on this summary: {summary}",
+        n=1,
+        size="1024x1024"
+    )
+    url = response.data[0]["url"]
+    return url
 
-# Define the headers
-headers = CaseInsensitiveDict()
-headers["Content-Type"] = "application/json"
-headers["Authorization"] = f"Bearer {API_KEY}"
+# Get the url of the image
+url = generate_image(generate_summary(songs, selected_name, "abstract"))
 
-# Define the data to send in the request
-data = """
-{
-    """
+# Open the image and show it
+image = Image.open(BytesIO(requests.get(url).content))
+image.show()
 
-# Add the model to use
-data += f'"model": "{MODEL}",'
-
-# Add the prompt
-prompt = "Generate an image that captures the overall theme and vibe of this playlist with the name " + selected_name
-data += f'"prompt": "{prompt}",'
-
-# Add the number of images to generate
-data += """
-    "num_images":1,
-    "size":"1024x1024",
-    "response_format":"url"
-}
-"""
-
-# Send the request
-response = requests.post(ENDPOINT, headers=headers, data=data)
-
-# Check the status code
-if response.status_code != 200:
-    raise ValueError("Failed to generate image")
-
-# Print the image URL
-image_url = response.json()["data"][0]["url"]
-print(f"Image URL: {image_url}")
-
-# Download the image and save it to a file
-urllib.request.urlretrieve(image_url, "playlist_image.jpg")

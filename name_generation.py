@@ -1,9 +1,13 @@
 # Import the OpenAI API client
 import openai
 #import songs from selected playlist 
-from PlaylistPlatte.song_data import songs
+from song_data import songs
+
+from dotenv import load_dotenv
+import os 
+
 # Replace this with your own API key
-openai.api_key = "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"
+openai.api_key = os.getenv('openai_api_key')
 
 # Define a function to generate a name for the playlist using ChatGPT
 def generate_name(songs, used_names):

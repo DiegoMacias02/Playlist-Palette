@@ -1,6 +1,6 @@
 # Import the Spotipy client
 import spotipy
-from PlaylistPlatte.authenticate import sp, username
+from authenticate import sp, username
 # Retrieve the user's playlists
 playlists = sp.user_playlists(username)
 

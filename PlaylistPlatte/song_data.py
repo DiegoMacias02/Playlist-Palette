@@ -1,5 +1,5 @@
-from authenticate import sp
-from select_playlist import selected_id
+from PlaylistPlatte.authenticate import sp
+from PlaylistPlatte.select_playlist import selected_id
 # Retrieve the selected playlist
 try:    
     selected_playlist = sp.playlist(selected_id)

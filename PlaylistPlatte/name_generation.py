@@ -1,7 +1,7 @@
 # Import the OpenAI API client
 import openai
 #import songs from selected playlist 
-from song_data import songs
+from PlaylistPlatte.song_data import songs
 # Replace this with your own API key
 openai.api_key = "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"
 

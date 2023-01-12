@@ -10,7 +10,7 @@ openai.api_key = os.getenv('openai_api_key')
 # Define a function to generate a summary of the playlist using GPT-3
 def generate_summary(songs):
     song_string = " ".join([f"{song[0]} by {song[1]}" for song in songs])
-    prompt = f"Summarize in 2-4 very descriptive and creative sentences, the underlying rhythmic style/groove, mood and feel of these songs in a playlist, make sure to NOT USE ANY OF THE SONG NAMES OR ARTIST NAMES' IN THE SUMMARY. This playlist contains the following songs (make sure these 2-4 sentences encapsulates the entire feeling someone would recieve when listening to this playlist): {song_string}"
+    prompt = f"Hello GPT-3, I am currently using you as an API call for a project where I am creating playlist name recommendations for users based on their songs. I need you to summarize in 2-4 very descriptive and creative sentences, the underlying rhythmic style/groove, mood and feel of these songs in a playlist. It is important that the summary encapsulates the entire feeling someone would receive when listening to the playlist, make sure to NOT USE ANY OF THE SONG NAMES OR ARTIST NAMES in the summary. This playlist contains the following songs: {song_string}. Can you please provide me with a summary that accurately captures the essence of this playlist?"
     completions = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,

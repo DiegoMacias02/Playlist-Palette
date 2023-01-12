@@ -19,7 +19,7 @@ art_style = input("Enter the art style you want to use for your playlist image "
 # Define a function to generate an image using DALL-E 2 based on the summary
 def generate_image(summary):
     response = openai.Image.create(
-        prompt=f"generate an image based on this summary with this style of imagery {art_style}: {summary}",
+        prompt=f"generate an image based on this summary with this style of imagery {art_style} this image will be the cover for an album: {summary}",
         n=1,
         size="1024x1024"
     )

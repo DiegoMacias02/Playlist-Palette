@@ -22,17 +22,6 @@ def generate_summary(songs):
     message = completions.choices[0].text
     return message
 
-#summary of the songs
-summary = generate_summary(songs)
-
-#prompt to feed to gtp-3
-prompt_summary = (f"Hello I am working on a project to make playlist-name recommendation to users based on their songs in their playlist."                     
-,"I need you to give me one name that you believe fits this playlist and that is it nothing else in the text-response(because I am"
-," using you as an api call currently) you give (Do not include the title, or any words from the tile of any the songs, or any of aritist name in the response)"
-, "Give me a creative, unique, quirky, and aesthetic name that encapsulates the overall vibe of the following songs, only" 
-,f"respond with a 1-5 word name for this playlist and nothing else. Here is a summary GTP-3 came up with about the songs: {summary}. " 
-,"Please provide me with a 1-5 word response on what you believe is a creative, quirky, and asthetic name that fits this summary.")
-
 #generates "playlist-names" based on a summary created by gtp-3 of a user's playlist songs
 def generate_name(summary, used_names):
     prompt = f"Please provide a 2-5 word, creative, quirky, and unique name for a playlist based on the following summary of the playlist: {summary}"
@@ -57,19 +46,26 @@ def generate_name(summary, used_names):
             presence_penalty=0.3
         )
         name = response.choices[0].text.strip()
+        used_names.add(name)
     return name
 
 
-used_names = []
+used_names = set()
 names = []
+
+#summary of the songs
+summary = generate_summary(songs)
+
 for i in range(5):
-    name = generate_name(prompt_summary, used_names)
+    name = generate_name(summary, used_names)
     names.append(name)
-    used_names.append(name)
 
 print("Here are five creative names for your playlist:")
 for count, name in enumerate(names, start=1):
     print(count, name)
 
 chosen_name = input("Enter the number of the name you want to select (1-5): ")
+while not chosen_name.isnumeric():
+    chosen_name = input("Enter a valid number from 1-5: ")
+
 chosen_name = names[int(chosen_name) - 1]

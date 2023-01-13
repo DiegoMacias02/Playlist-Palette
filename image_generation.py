@@ -16,7 +16,7 @@ openai.api_key = os.getenv('openai_api_key')
 art_style = input("Enter the art style you want to use for your playlist image "
                     + "(e.g. 'watercolor', 'oil', 'graffiti', etc.): ")
 
-image_prompt = f"Generate an image (do not include any text in the image!), of this style {art_style}, that would emit the same feeling/emotion as this summary of a person's playlist {summary} "
+image_prompt = f"Generate an image (do not include any text in the image!), of this style {art_style}, that would emit the same emotion/feeling/vision as this summary of a person's description of their playlist: {summary}. Remember do not include any text at all."
 # Define a function to generate an image using DALL-E 2 based on the summary
 def generate_image(summary):
     response = openai.Image.create(

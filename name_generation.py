@@ -10,7 +10,7 @@ openai.api_key = os.getenv('openai_api_key')
 # Define a function to generate a summary of the playlist using GPT-3
 def generate_summary(songs):
     song_string = " ".join([f"{song[0]} by {song[1]}" for song in songs])
-    prompt = f"Hello GPT-3, I am currently using you as an API call for a project where I am creating playlist name recommendations for users based on their songs. I need you to summarize in 2-4 very descriptive and creative sentences, the underlying rhythmic style/groove, mood and feel of these songs in a playlist. It is important that the summary encapsulates the entire feeling someone would receive when listening to the playlist, DO NOT INCLUDE ANY OF THE SONG NAMES OR ARTIST NAMES in the summary. This playlist contains the following songs: {song_string}. Can you please provide me with a summary that accurately captures the essence of this playlist? Also do not mention that it is a playlist that you are talking about. Just make sure to describe the feelings it conveys, not that these feelings coem from a playlist."
+    prompt = f"Hello GPT-3, I am currently using you as an API call for a project where I am creating playlist name recommendations for users based on their songs. I need you to summarize in 2-4 very descriptive and creative sentences, the underlying rhythmic style/groove, mood and feel of these songs. It is important that the summary encapsulates the entire feeling someone would receive when listening to these songs, DO NOT INCLUDE ANY OF THE SONG NAMES OR ARTIST NAMES in the summary. The following songs: {song_string}. Can you please provide me with a summary that accurately captures the essence/emotion of this? Also do not mention that it any songs or even that what you are summarizing are songs!"
     completions = openai.Completion.create(
         engine="text-davinci-002",
         prompt=prompt,
@@ -24,9 +24,9 @@ def generate_summary(songs):
 
 #generates "playlist-names" based on a summary created by gtp-3 of a user's playlist songs
 def generate_name(summary, used_names):
-    prompt = f"Please provide a 2-5 word, creative, quirky, and unique name for a playlist based on the following summary of the playlist: {summary}"
+    prompt = f"Please provide a 2-5 word, creative, fun, quirky, and unique name for a playlist based on the following summary of the playlist: {summary}"
     response = openai.Completion.create(
-        engine="text-davinci-002",
+        engine="text-davinci-003",
         prompt=prompt,
         max_tokens=32,
         temperature=0.7,
@@ -37,7 +37,7 @@ def generate_name(summary, used_names):
     name = response.choices[0].text.strip()
     while name in used_names:
         response = openai.Completion.create(
-            engine="text-davinci-002",
+            engine="text-davinci-003",
             prompt=prompt,
             max_tokens=32,
             temperature=0.7,

@@ -1,29 +1,27 @@
-# Import the Spotipy client and the prompt_for_user_token function from the spotipy.util module
+import os
 import spotipy
-#from spotipy.oauth2 import SpotifyClientCredentials
-import spotipy.util as util
+from spotipy.oauth2 import SpotifyOAuth
 from dotenv import load_dotenv
-import os 
 
-#load enviroment 
+# Load environment variables
 load_dotenv()
 
-#ID's for accessing api
+# Spotify app credentials
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+# Now loading REDIRECT_URI from the environment for flexibility
+REDIRECT_URI = os.getenv('REDIRECT_URI', 'http://localhost:8888/callback')  # Default if not specified
 
-#Authentication - without user
-#auth_manager = SpotifyClientCredentials(client_id= os.getenv('CLIENT_ID'), client_secret= os.getenv('CLIENT_SECRET'))
+# Expanded scope to include modifying playlists
+SCOPES = 'playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private'
 
-# Replace this with the redirect URI you specified when registering your app
-REDIRECT_URI = "http://localhost:8888/callback"
+# Use SpotifyOAuth for authentication which handles token refresh automatically
+auth_manager = SpotifyOAuth(client_id=CLIENT_ID,
+                            client_secret=CLIENT_SECRET,
+                            redirect_uri=REDIRECT_URI,
+                            scope=SCOPES,
+                            show_dialog=True)  # show_dialog ensures users are prompted to confirm permissions
 
-# Request the username from the user
-username = input("Enter your Spotify username: ")
+# Create a Spotipy client with the auth_manager
+sp = spotipy.Spotify(auth_manager=auth_manager)
 
-# Request authorization to access the user's playlists
-scope = "playlist-read-private playlist-read-collaborative"
-token =  util.prompt_for_user_token(username, scope, client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URI)
-
-# Create a Spotipy client using the authorization token
-sp = spotipy.Spotify(auth = token)

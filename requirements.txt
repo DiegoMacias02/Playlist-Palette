@@ -1,3 +1,4 @@
 spotipy
 openai
 python-dotenv
+transformers
